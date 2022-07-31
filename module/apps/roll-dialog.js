@@ -16,22 +16,28 @@ export default class RollDialog extends Dialog {
         let totalMods = {
             diceModifier : 0,
             successModifier : 0,
-            triggerModifier   : 0
+            triggerModifier   : 0,
         }
+
+        let modsSelected = this.data.dialogData.prefilled
         this.customModifiers.val().forEach(i => {
             let index = Number(i)
             let modifierSelected = this.data.dialogData.customModifiers[index]
-
-            switch (modifierSelected.modifyType) {
+            switch (modifierSelected.modifyType){
                 case "D":
-                    totalMods.diceModifier += modifierSelected.modifyNumber
+                    totalMods.diceModifier = modifierSelected.modifyNumber + modsSelected.diceModifier
+                    totalMods.successModifier += modsSelected.successModifier
+                    totalMods.triggerModifier += modsSelected.triggerModifier
                     break;
                 case "S":
-                    totalMods.successModifier += modifierSelected.modifyNumber
+                    totalMods.diceModifier += modsSelected.diceModifier
+                    totalMods.successModifier += modifierSelected.modifyNumber + modsSelected.successModifier
+                    totalMods.triggerModifier += modsSelected.triggerModifier
                     break;
                 case "T":
-                    totalMods.triggerModifier += modifierSelected.modifyNumber
-                    break;
+                    totalMods.diceModifier += modsSelected.diceModifier
+                    totalMods.successModifier += modsSelected.successModifier
+                    totalMods.triggerModifier += modifierSelected.modifyNumber + modsSelected.triggerModifier
             }
         })
         return totalMods
@@ -76,6 +82,11 @@ export default class RollDialog extends Dialog {
             this._onValueChange()
 
         })
+
+        this.prefilled = html.find(".prefilled-modifiers").change(ev => {
+            this._onValueChange()
+        })
+
 
         this.customModifiers = html.find(".custom-modifiers").change(ev => {
             this._onValueChange()

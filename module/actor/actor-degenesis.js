@@ -69,9 +69,10 @@ export class DegenesisActor extends Actor {
            this.general.encumbrance.max =     this.general.encumbrance.override || (this.attributes.body.value + this.skills.force.value);
 
             this.prepareItems();
-            this.modifiers.addEncumbranceModifiers(this)
+            this.prepareEncumbranceModifiers();
+            
 
-            this.general.actionModifier = this.modifiers.action.D
+            this.general.actionModifier =  this.modifiers.action.D
             this.general.movement =        this.attributes.body.value + this.skills.athletics.value + (this.modifiers.movement || 0)
             this.fighting.initiative =     this.attributes.psyche.value + this.skills.reaction.value + this.modifiers.action.D + this.modifiers.initiative.D;
             this.fighting.dodge =          this.attributes.agility.value + this.skills.mobility.value + this.modifiers.action.D + this.modifiers.dodge.D;
@@ -84,8 +85,31 @@ export class DegenesisActor extends Actor {
             console.error(e);
         }
     }
-     
 
+
+    prepareEncumbranceModifiers(){
+        //set variable for difference between current and max encumbrance
+            let encumbranceOver = (this.general.encumbrance.current - this.general.encumbrance.max);
+
+        // if encumbranceOver is positive (you are over max encumbrance), if it's negative you are below max encumbrance
+        
+            if (encumbranceOver > 0){
+                //fixes the encumbrance modifiers that were previously not being added
+                 this.modifiers.action.D -= encumbranceOver;
+                // sets encumbrance state to true
+                this.state.overEncumbered = true;
+            }
+            else if (encumbranceOver < 0) {
+                // prevents resetting D completely to 0 in case other things affect the action modifiers
+                encumbranceOver = 0
+                this.modifiers.action.D += encumbranceOver;
+                // sets encumbrance state to false
+                this.state.overEncumbered = false;
+            }
+            else {
+                this.state.overEncumbered = false;
+            }
+    }
 
 
     prepareItems() {
@@ -130,6 +154,7 @@ export class DegenesisActor extends Actor {
             // Modifiers fix
 
             if (i.type == "modifier" && i.enabled) {
+                if (i.action == "skill") {skill.modifier += i.diceModifier;}
                 if (i.action == "armor") {armor.modifier += i.modifyNumber;}
                 if (i.action == "p_defense") {this.modifiers.p_defense += i.modifyNumber;}
             }
@@ -141,7 +166,7 @@ export class DegenesisActor extends Actor {
 
         if (encumbrance.pct > 100) {
             encumbrance.over = true// = "var(--degenesis-red)";
-        } else {
+        } else { 
             encumbrance.over = false;
         }
 
@@ -168,7 +193,7 @@ export class DegenesisActor extends Actor {
             skill : this.data.data.skills[skill],
             actionNumber : this.getSkillTotal(skill),
             difficulty : 0,
-            diceModifier : 0,
+            diceModifier : this.data.data.skills.modifier,
             successModifier : 0,
             triggerModifier : 0
         }
@@ -303,10 +328,21 @@ export class DegenesisActor extends Actor {
 
         const fullDamage = weapon.fullDamage(rollResults.triggers, { modifier: this.modifiers.damage })
         cardData.damageFull = `${fullDamage}`;
-        if (rollData.weapon.isRanged)
+        if (rollData.weapon.isRanged && rollData.weapon.mag.current > 0){
             this.updateEmbeddedDocuments("Item", [{ _id: rollData.weapon.id, "data.mag.current": rollData.weapon.mag.current - 1 }])
-        this.postRollChecks(rollResults, "weapon")
-        return { rollResults, cardData }
+            this.postRollChecks(rollResults, "weapon")
+            return { rollResults, cardData }
+        }
+        else if (rollData.weapon.isMelee) {
+            this.updateEmbeddedDocuments("Item", [{ _id: rollData.weapon.id, "data.mag.current": rollData.weapon.mag.current - 1 }])
+            this.postRollChecks(rollResults, "weapon")
+            return { rollResults, cardData }
+        }
+        else {
+            ui.notifications.warn("Mag is empty!");
+            AudioHelper.play({src: "sounds/notif.wav", volume: 0.8, loop: false}, true);
+            return null;
+        }
     }
 
 

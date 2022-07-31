@@ -106,11 +106,14 @@ export default class ModifierManager
     }
 
 
+    // not sure why lines 112-115 didnt work, but I added the same functionality for encumbrance modifiers in actor-degenesis.js @ lines 72 &  90-108
+
+    /*
     addEncumbranceModifiers(actor) {
         if (actor.data.encumbrance && (actor.data.encumbrance.current > actor.data.encumbrance.max))
-            this.action.D -= (actor.data.encumbrance.current - actor.data.encumbrance.max)
+            return (actor.data.encumbrance.current - actor.data.encumbrance.max)
     }
-
+    */
 
         /**
      * 
@@ -123,39 +126,51 @@ export default class ModifierManager
             diceModifier : 0,
             successModifier : 0,
             triggerModifier : 0,
+            modifyType: ""
         }
 
         if (game.user.targets.size)
         {
            prefilled.difficulty = Array.from(game.user.targets)[0].actor.data.data.fighting.passiveDefense
         }
+
         for (let modifier in this)
         {
+            let skillMod = modifier.split(":")[1]
             let useModifier = false;
-            if (modifier == "action" && (type != "weapon" && type != "dodge" &&  type != "mentalDefense" && type != "initiative"))
+            if (modifier != "action" && (type != "weapon" && type != "dodge" &&  type != "mentalDefense" && type != "initiative"
+            && type != "custom"))
             {
                 useModifier = true;
+
+                if (modifier.includes("skill:"))
+                {
+                    
+                    if (skillMod == skill){
+
+                        prefilled.diceModifier += this[modifier].D
+                        prefilled.successModifier += this[modifier].S
+                        prefilled.triggerModifier += this[modifier].T
+
+                        if(prefilled.diceModifier > 0 && prefilled.successModifier == 0 && prefilled.triggerModifier == 0){
+                            prefilled.modifyType = "D"
+                        }
+                        else if(prefilled.successModifier > 0 && prefilled.diceModifier == 0 && prefilled.triggerModifier == 0){
+                            prefilled.modifyType = "S"
+                        }
+                        else if (prefilled.triggerModifier > 0 && prefilled.diceModifier == 0 && prefilled.successModifier == 0){
+                            prefilled.modifyType = "T"
+                        }
+
+                    }
+                }
             }
             else if (modifier.includes("attr:"))
             {
                 let attrMod = modifier.split(":")[1]
                 if (attrMod == DEGENESIS.skillAttributes[skill])
-                    useModifier = true;
+                    useModifier = true
             }
-            else if (modifier.includes("skill:"))
-            {
-                let skillMod = modifier.split(":")[1]
-                if (skillMod == skill)
-                    useModifier = true;
-            }
-
-            if (useModifier)
-            {   
-                prefilled.diceModifier += this[modifier].D
-                prefilled.successModifier += this[modifier].S
-                prefilled.triggerModifier += this[modifier].T
-            }
-
         }
         return prefilled
     }
@@ -169,7 +184,7 @@ export default class ModifierManager
      */
     forSheet(type, skill, use) {
         let prefilled = {
-            diceModifier : 0,
+            diceModifier : this.action.D,
             successModifier : 0,
             triggerModifier : 0,
         }

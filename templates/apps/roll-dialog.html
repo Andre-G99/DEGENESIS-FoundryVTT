@@ -1,28 +1,44 @@
 <div class="dialog-bonuses">
-    <div class = "dialog-inputs">
-        <span>
-            <label class="input-label">{{localize "DGNS.Difficulty"}}</label>
-            <input class="dialog-input" name="difficulty" value="{{prefilled.difficulty}}"/>
-        </span>
-        <div>
-            <span class="input-label">Add Dice</span><input class="dialog-input" name="diceModifier" value="{{prefilled.diceModifier}}"/>
-        </div>
-        <div>
-            <span class="input-label">Add Successes</span><input class="dialog-input" name="successModifier" value="{{prefilled.successModifier}}"/>
-        </div>
-        <div>
-            <span class="input-label">Add Triggers</span><input class="dialog-input" name="triggerModifier" value="{{prefilled.triggerModifier}}"/>
-        </div>
-    </div>
 
-    <div class="custom-modifier-section">
-        <label>{{localize "DGNS.Modifiers"}}</label>
-        <select name="customModifiers" class = "custom-modifiers" multiple>
+    <script>
+        
+    </script>
+
+    <form>
+        <div class = "dialog-inputs">
+            
+            <span>
+                <label class="input-label">{{localize "DGNS.Difficulty"}}</label>
+                <input class="dialog-input" name="difficulty" value="{{prefilled.difficulty}}"/>
+            </span>
+            <div>
+                <span class="input-label">Add Dice</span><input class="dialog-input" name="diceModifier" value="{{prefilled.diceModifier}}"/>
+            </div>
+            <div>
+                <span class="input-label">Add Successes</span><input class="dialog-input" name="successModifier" value="{{prefilled.successModifier}}"/>
+            </div>
+            <div>
+                <span class="input-label">Add Triggers</span><input class="dialog-input" name="triggerModifier" value="{{prefilled.triggerModifier}}"/>
+            </div>
+        </div>
+        <div class="custom-modifier-section">
+            <label>Custom {{localize "DGNS.Modifiers"}}</label>
+            <select name="customModifiers" class = "custom-modifiers" multiple>
             {{#each customModifiers as |modifier m|}}
-            <option value="{{m}}">{{modifier.description}} {{modifier.modifyNumber}}{{modifier.modifyType}}</option>
+                <option value="{{m}}">{{modifier.description}} {{modifier.modifyNumber}}{{modifier.modifyType}}</option>
             {{/each}}
-        </select>
-    </div>
+            </select>
+            Static Modifiers:<br>
+            {{#each prefilled as |prefilled p|}}
+                {{#ifEquals prefilled "0"}}
+                {{else}}
+                    {{#addPrefilled prefilled}}{{/addPrefilled}}
+                {{/ifEquals}}
+                
+            {{/each}}
+            <button type="reset"> Reset All </button>
+        </div>
+    </form>
 </div>
 
 {{#if showSecondaryOption}}

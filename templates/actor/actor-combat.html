@@ -68,6 +68,16 @@
              <h3>{{localize "DGNS.State"}}</h3>
           </div>
        </div>
+
+        <div class="combat">
+            <a class="general-name checkbox" data-target="data.state.overEncumbered"> Over Encumbered <span class="nocaps"></span></a>             
+            {{#if actor.state.overEncumbered}} 
+            <a class="square border-black button-position checkbox" data-target="data.state.overEncumbered"><div class="square-into black"></div></a>
+            {{else}}
+            <a class="square button-position checkbox" data-target="data.state.overEncumbered"><div class="square-into"></div></a>
+            {{/if}}
+        </div>
+
         <div class="combat">
             <a class="general-name checkbox" data-target="data.state.motion">{{localize "DGNS.InMotion"}} <span class="nocaps">(>2m)</span></a>             
             {{#if actor.state.motion}} 
@@ -168,6 +178,7 @@
          {{#each arsenal.meleeWeapons as |weapon w|}}
          <div class="weapon item" data-item-id="{{weapon.id}}">
             <a class="weapon-name">{{weapon.name}}</a>
+         {{#if weapon.equipped}}
             <div class="weapon-characteristics">
                <div class="legend-name uses">
                   <span><a class="roll-weapon" data-use="attack">{{localize "DGNS.Attack"}} {{weapon.dice.attack}}D</a> <a class="roll-weapon" data-use="defense">{{localize "DGNS.Defense"}} {{weapon.dice.defense}}D</a></span>
@@ -181,6 +192,7 @@
                   <span>{{weapon.distance.melee}}</span>
                </div>
             </div>
+         {{/if}}
             <div class="break"></div>
             {{#if weapon.qualities.length}}
             <div class="weapon-properties">
@@ -241,6 +253,8 @@
             {{#each arsenal.rangedWeapons as |weapon w|}}
             <div class="weapon item" data-item-id="{{weapon.id}}">
                <a class="weapon-name">{{weapon.name}}</a>
+
+         {{#if weapon.equipped}}
             <div class="weapon-characteristics">
                <div class="legend-name uses-ranged">
                   <span><a class="roll-weapon" data-use="attack-short">≤{{weapon.distance.short}}m({{weapon.dice.effective}}D) </a><a class="roll-weapon" data-use="attack-far">≤{{weapon.distance.far}}m({{weapon.dice.far}}D) </a><a class="roll-weapon" data-use="attack-extreme">>{{weapon.distance.far}}m({{weapon.dice.extreme}}D)</a> </span>
@@ -255,6 +269,7 @@
                   <span>{{weapon.distance.short}}/{{weapon.distance.far}}</span>
                </div>
             </div>
+         {{/if}}
             <div class="break"></div>
             {{#if weapon.qualities.length}}
             <div class="weapon-properties">
@@ -315,6 +330,7 @@
             {{#each arsenal.sonicWeapons as |weapon w|}}
             <div class="weapon item" data-item-id="{{weapon.id}}">
                <a class="weapon-name">{{weapon.name}}</a>
+         {{#if weapon.equipped}}
             <div class="weapon-characteristics">
                <div class="legend-name uses-ranged-sonic">
                   <span><a class="roll-weapon" data-use="attack">{{localize "DGNS.Attack"}} (INT+Eng & PSY+Dom)</a></span>
@@ -329,6 +345,7 @@
                   <span>{{weapon.distance.melee}}</span>
                </div>
             </div>
+         {{/if}}
             <div class="break"></div>
             {{#if weapon.qualities.length}}
             <div class="weapon-properties">

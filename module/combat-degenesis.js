@@ -59,7 +59,7 @@ export class DegenesisCombat extends Combat {
     static async rollInitiativeFor(actor) {
         if (!actor) return 0;
         const spentEgo = actor.state.spentEgo.value;
-        const {rollResults, cardData} = await actor.rollFightRoll("initiative", {skipDialog : true, spentEgo});
+        const {rollResults, cardData} = await actor.rollFightRoll("initiative", {skipDialog : false, spentEgo});
         let actionCount = 1;
         if (rollResults.triggers > 1) {
             actionCount = 1 + Math.floor(rollResults.triggers / 2);

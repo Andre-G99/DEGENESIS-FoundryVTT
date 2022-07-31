@@ -152,9 +152,9 @@ export class DegenesisActorSheet extends ActorSheet {
 
     constructArnseal() {
         return {
-            meleeWeapons: this.actor.weaponItems.filter(i => i.isMelee && i.equipped && !i.inContainer),
-            rangedWeapons: this.actor.weaponItems.filter(i => i.isRanged && i.equipped && !i.inContainer),
-            sonicWeapons: this.actor.weaponItems.filter(i => i.isSonic && i.equipped && !i.inContainer),
+            meleeWeapons: this.actor.weaponItems.filter(i => i.isMelee && !i.inContainer),
+            rangedWeapons: this.actor.weaponItems.filter(i => i.isRanged && !i.inContainer),
+            sonicWeapons: this.actor.weaponItems.filter(i => i.isSonic && !i.inContainer),
             armor : this.actor.armorItems.filter(i => i.equipped && !i.inCointaer)
         }
     }

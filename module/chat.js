@@ -3,8 +3,6 @@ import { DEG_Utility } from "./utility.js";
 
 export class DegenesisChat {
 
-
-
     static renderRollCard(rollResult, cardData)
     {
         rollResult.rolls.forEach(r => {

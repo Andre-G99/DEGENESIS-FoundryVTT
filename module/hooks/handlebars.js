@@ -20,5 +20,17 @@ export default function () {
         Handlebars.registerHelper("configLookup", function (obj, key) {
             return DEGENESIS[obj][key]
         })
+
+        Handlebars.registerHelper('ifEquals', function(arg1, arg2, options) {
+            return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
+        });
+
+        Handlebars.registerHelper('addPrefilled', function(prefilledModRow) {
+            let fullText = []
+            fullText.push(prefilledModRow)
+            let formatText = ""
+            formatText += fullText;
+                return (formatText);
+        });
     })
 }

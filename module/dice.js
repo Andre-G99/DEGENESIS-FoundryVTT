@@ -56,25 +56,41 @@ export class DegenesisDice
         let ones = 0;
         let result;
         let rolls = [];
+        let baseDice = [];
+        let vanillaRoll;
 
-        actionNumber += diceModifier
+        //actionNumber is the number of dice
+        actionNumber += diceModifier;
+
+
+        //reassign actionNumber to 0 if it goes below 0, for initiative's sake
+        if(actionNumber < 0){
+            actionNumber = 0;
+        }
+
         let autoSuccesses = 0;
         if (actionNumber > 12) {
             autoSuccesses = actionNumber - 12;
             actionNumber = 12;
         }
+        
         let roll = new Roll(`${actionNumber}d6cs>3`);
+        vanillaRoll = new Roll(`${actionNumber -= diceModifier}d6cs>3`);
+        await vanillaRoll.roll();
         await roll.roll();
 
+        baseDice = vanillaRoll.terms[0].results;
         rolls = roll.terms[0].results;
         successes = roll.total + autoSuccesses + successModifier;
+
 
         rolls.forEach(r => {
             if (r.result == 6)
                 triggers++;
             if (r.result == 1)
-                ones++;
+                 ones++;
         })
+        
 
         if (difficulty > 0) {
             if (successes >= difficulty) {
@@ -91,8 +107,10 @@ export class DegenesisDice
             triggers,
             ones,
             result,
-            rolls
+            rolls,
+            baseDice
         }
+
         return [rollResult, roll];
     }
 

@@ -92,7 +92,7 @@ export class DegenesisItemSheet extends ItemSheet {
 
   _onCheckboxClick(ev)
   {
-    let itemData = foundry.utils.deepClone(this.item.data)
+    let itemData = foundry.utils.deepClone(this.item)
     let target = $(ev.currentTarget).attr("data-target")
 
     if (target == "quality")
@@ -116,9 +116,11 @@ export class DegenesisItemSheet extends ItemSheet {
       return;
     }
 
-    if (target)
-      setProperty(itemData, target, !getProperty(itemData, target))
-    this.item.update(itemData);
+    if (target){
+      let checked = getProperty(itemData, target)
+      setProperty(itemData.data, target, !checked)
+      this.item.update(itemData.data.data)
+    }
   }
 
 
