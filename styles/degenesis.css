@@ -2557,7 +2557,8 @@ margin-top: 12px;
 .roll-dialog .secondary-selection {
     width: 100%;
     justify-content: center;
-    margin: 5px
+    margin: 5px;
+    padding-top: 20px;
 }
 
 .roll-dialog .custom-modifiers > *{
@@ -2665,6 +2666,7 @@ button {
     border: none;
     color: white;
     transition: color 0.2s, border 0.2s, background 0.2s;
+    margin-right: 0;
 }
 
 form button:hover,
