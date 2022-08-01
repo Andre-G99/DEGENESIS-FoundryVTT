@@ -193,7 +193,7 @@ export class DegenesisActor extends Actor {
             skill : this.data.data.skills[skill],
             actionNumber : this.getSkillTotal(skill),
             difficulty : 0,
-            diceModifier : this.data.data.skills.modifier,
+            diceModifier : 0,
             successModifier : 0,
             triggerModifier : 0
         }

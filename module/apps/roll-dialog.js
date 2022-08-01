@@ -18,28 +18,29 @@ export default class RollDialog extends Dialog {
             successModifier : 0,
             triggerModifier   : 0,
         }
-
+        let dice = 0
+        let successes = 0
+        let triggers = 0
         let modsSelected = this.data.dialogData.prefilled
         this.customModifiers.val().forEach(i => {
             let index = Number(i)
             let modifierSelected = this.data.dialogData.customModifiers[index]
             switch (modifierSelected.modifyType){
                 case "D":
-                    totalMods.diceModifier = modifierSelected.modifyNumber + modsSelected.diceModifier
-                    totalMods.successModifier += modsSelected.successModifier
-                    totalMods.triggerModifier += modsSelected.triggerModifier
+                    dice += modifierSelected.modifyNumber
                     break;
                 case "S":
-                    totalMods.diceModifier += modsSelected.diceModifier
-                    totalMods.successModifier += modifierSelected.modifyNumber + modsSelected.successModifier
-                    totalMods.triggerModifier += modsSelected.triggerModifier
+                    successes += modifierSelected.modifyNumber
                     break;
                 case "T":
-                    totalMods.diceModifier += modsSelected.diceModifier
-                    totalMods.successModifier += modsSelected.successModifier
-                    totalMods.triggerModifier += modifierSelected.modifyNumber + modsSelected.triggerModifier
+                    triggers += modifierSelected.modifyNumber
+                    break;
+
             }
         })
+        totalMods.diceModifier = dice + modsSelected.diceModifier
+        totalMods.successModifier = successes + modsSelected.successModifier
+        totalMods.triggerModifier = triggers + modsSelected.triggerModifier
         return totalMods
     }
 

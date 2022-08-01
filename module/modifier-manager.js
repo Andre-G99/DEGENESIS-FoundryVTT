@@ -124,9 +124,10 @@ export default class ModifierManager
     forDialog(type, skill, use) {
         let prefilled = {
             diceModifier : 0,
+            actionMod: "",
             successModifier : 0,
             triggerModifier : 0,
-            modifyType: ""
+            modifyTypeOne: ""
         }
 
         if (game.user.targets.size)
@@ -147,19 +148,18 @@ export default class ModifierManager
                 {
                     
                     if (skillMod == skill){
-
-                        prefilled.diceModifier += this[modifier].D
-                        prefilled.successModifier += this[modifier].S
-                        prefilled.triggerModifier += this[modifier].T
-
+                        prefilled.diceModifier = this[modifier].D
+                        prefilled.successModifier = this[modifier].S
+                        prefilled.triggerModifier = this[modifier].T
+    
                         if(prefilled.diceModifier > 0 && prefilled.successModifier == 0 && prefilled.triggerModifier == 0){
-                            prefilled.modifyType = "D"
+                            prefilled.modifyTypeOne = "D"
                         }
                         else if(prefilled.successModifier > 0 && prefilled.diceModifier == 0 && prefilled.triggerModifier == 0){
-                            prefilled.modifyType = "S"
+                            prefilled.modifyTypeOne = "S"
                         }
                         else if (prefilled.triggerModifier > 0 && prefilled.diceModifier == 0 && prefilled.successModifier == 0){
-                            prefilled.modifyType = "T"
+                            prefilled.modifyTypeOne = "T"
                         }
 
                     }
@@ -170,6 +170,11 @@ export default class ModifierManager
                 let attrMod = modifier.split(":")[1]
                 if (attrMod == DEGENESIS.skillAttributes[skill])
                     useModifier = true
+            }
+            else if (modifier == "action"){
+                prefilled.diceModifier += this.action.D
+                prefilled.actionMod = "D"
+                console.log(prefilled)
             }
         }
         return prefilled
